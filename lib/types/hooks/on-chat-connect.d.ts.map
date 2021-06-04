@@ -1,0 +1,1 @@
+{"version":3,"file":"on-chat-connect.d.ts","sourceRoot":"","sources":["../../../src/types/hooks/on-chat-connect.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,SAAS,CAAC,CAAC,GAAG,GAAG;IAChC,eAAe,CAAC,MAAM,EAAE,CAAC,EAAE,GAAG,IAAI,EAAE,GAAG,EAAE,GAAG,GAAG,CAAC;CACjD"}

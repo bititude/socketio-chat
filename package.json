@@ -1,0 +1,55 @@
+{
+  "name": "socket-chat",
+  "version": "1.0.0",
+  "description": "A socket.io express chat integration library",
+  "main": "lib/index.js",
+  "dependencies": {
+    "@socket.io/admin-ui": "^0.1.2",
+    "@socket.io/sticky": "^1.0.0",
+    "crypto": "^1.0.1",
+    "ioredis": "^4.27.3",
+    "socket.io": "^4.1.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4.26.4",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.3",
+    "prettier": "^2.3.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.2",
+    "ts-node-dev": "^1.1.6",
+    "typedoc": "^0.20.36",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "prebuild": "rimraf ./lib",
+    "build": "tsc",
+    "start": "ts-node-dev --respawn src/index.ts",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akhiakl/socket-chat.git"
+  },
+  "keywords": [
+    "socket",
+    "chat",
+    "socket",
+    "io",
+    "express"
+  ],
+  "author": "Akhil K",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akhiakl/socket-chat/issues"
+  },
+  "homepage": "https://github.com/akhiakl/socket-chat#readme"
+}
