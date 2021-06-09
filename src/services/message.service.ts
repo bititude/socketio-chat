@@ -1,6 +1,5 @@
-import ChatEmitter from "../helpers/event-listener";
-import Logger from "../helpers/logger";
-import { Message, Socket } from "../types";
+import { ChatEmitter, Logger } from "../helpers";
+import { Message, Socket, SOCKET_EVENTS } from "../types";
 
 export class MessageService {
   private logger: Logger;
@@ -14,14 +13,22 @@ export class MessageService {
    * @param socket Connected user socket
    * @param to roomId
    */
-  async sendPrivateMessage(socket: Socket, message: Message) {
+  sendPrivateMessage(socket: Socket, { content, to }: Partial<Message>) {
     const user = socket.user;
     if (!user) {
-      return;
+      throw new Error("No user found");
     }
-    socket.to(message.to).emit("private message", message);
+    if (!to || !content) {
+      throw new Error("No content or to");
+    }
+    const from = user.userRoomId;
+    socket.to(to).emit(SOCKET_EVENTS.PVT_MESSAGE, {
+      content,
+      to,
+      from,
+    });
     this.logger.log(
-      `User ${user.userRoomId} send a message to user ${message.to}`
+      `Message send from room ${from} send a message to room ${to}`
     );
   }
 }

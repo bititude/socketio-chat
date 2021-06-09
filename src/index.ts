@@ -1,19 +1,19 @@
 import { Server } from "socket.io";
-import { instrument } from "@socket.io/admin-ui";
-import Logger from "./helpers/logger";
-import {
-  ChatEmitterEvents,
-  IoInitOptions,
-  Message,
-  Socket,
-  User,
-  UserAuth,
-} from "./types";
+import { ExtendedError } from "socket.io/dist/namespace";
+import { Logger, ChatEmitter } from "./helpers";
 import { UserService, MessageService } from "./services";
-import ChatEmitter from "./helpers/event-listener";
+import {
+  User,
+  Message,
+  IoInitOptions,
+  SOCKET_EVENTS,
+  IO_EVENTS,
+  ChatEmitterEvents,
+  Socket,
+} from "./types";
 const DEFAULT_PORT = 3030;
 
-abstract class ChatService {
+export abstract class ChatService {
   private io: Server;
   private logger: Logger;
   private userService: UserService;
@@ -21,15 +21,15 @@ abstract class ChatService {
   private chatEmitter: ChatEmitter;
 
   /* ***** protected methods ***** */
-  protected async onUserConnect?(): Promise<void>;
+  protected async onUserConnect?(user: User): Promise<void>;
   protected async onOnlineStatusSend?(connected: boolean): Promise<void>;
   protected async onRoomsJoined?(rooms: string[]): Promise<void>;
   protected async onMessageRecieved?(message: Message): Promise<void>;
-  protected async authenticateUser?(userAuth: UserAuth): Promise<User>;
+  protected async authenticateUser?(auth: any): Promise<User>;
   /* ***** protected methods end ***** */
 
   constructor(initOptions?: IoInitOptions, log?: boolean) {
-    const { srv, auth: isAuthEnabled, ...otherOptions } = initOptions || {};
+    const { srv, ...otherOptions } = initOptions || {};
     this.logger = new Logger({ log });
     this.chatEmitter = new ChatEmitter();
     this.userService = new UserService(this.chatEmitter, log);
@@ -38,28 +38,39 @@ abstract class ChatService {
     this.logger.log("Initializing socket");
     const hostServer = srv || DEFAULT_PORT;
     this.io = new Server(hostServer, otherOptions);
-    instrument(this.io, { auth: false });
-    if (isAuthEnabled) {
-      this.io.use(this.useAuthenticator);
-    }
+
+    /*  to enable socket admin ui, install package and uncomment below line */
+    // instrument(this.io, { auth: false });
+
+    this.logger.log("User Authentication enabled");
+    this.io.use(this.useAuthenticator);
+
     this.initiateEvents();
   }
 
   /**
    * Authenticator middleware
    */
-  private useAuthenticator = () => {
-    this.io.use(async (socket: Socket, next) => {
-      const { userRoomId } = socket.handshake.auth;
-      if (userRoomId) {
-        const user = await this.authenticateUser?.(userRoomId || socket.id);
-        if (user) {
-          socket.user = user;
-          return next();
-        }
-      }
-      return next(new Error("Unauthorized"));
-    });
+  private useAuthenticator = async (
+    socket: Socket,
+    next: (err?: ExtendedError) => void
+  ) => {
+    const auth = socket.handshake.auth;
+    if (!auth) {
+      next(new Error("No authentication provided. `handshake.auth` is emply"));
+    }
+    this.logger.log("Authenticating room...");
+    const user = await this.authenticateUser?.(auth);
+    if (user) {
+      const { userRoomId, friends, groups } = user;
+      socket.user = {
+        userRoomId,
+        friends: friends || [],
+        groups: groups || [],
+      };
+      return next();
+    }
+    return next(new Error("Unauthorized"));
   };
 
   /**
@@ -69,13 +80,16 @@ abstract class ChatService {
     this.logger.log("User connected with socket id::", socket.id);
     const user = socket.user;
     if (user) {
+      this.onUserConnect?.(user);
       this.userService.joinSockets(socket);
       this.userService.sendOnlineStatus(socket, true);
     }
     // Register private message events
-    socket.on("private message", (message: Message) =>
+    socket.on(SOCKET_EVENTS.PVT_MESSAGE, (message: Message) =>
       this.onPrivateMessage(socket, message)
     );
+    // Register client disconnection
+    socket.on(IO_EVENTS.DISCONNECT, () => this.clientOnDisconnect(socket));
   };
 
   /**
@@ -85,6 +99,8 @@ abstract class ChatService {
     const user = socket.user;
     if (user) {
       const matchingSockets = await this.io.in(user.userRoomId).allSockets();
+      console.log({ matchingSockets });
+
       const isDisconnected = matchingSockets.size === 0;
       if (isDisconnected) {
         this.userService.sendOnlineStatus(socket, false);
@@ -109,8 +125,7 @@ abstract class ChatService {
 
   initiateEvents() {
     this.serverOnInit();
-    this.io.on("disconnect", this.clientOnDisconnect);
-    this.io.on("connection", this.clientOnConnection);
+    this.io.on(IO_EVENTS.CONNECTION, this.clientOnConnection);
     const events: ChatEmitterEvents = {
       status_send: this.onOnlineStatusSend,
       rooms_joined: this.onRoomsJoined,
@@ -118,18 +133,3 @@ abstract class ChatService {
     this.chatEmitter.registerEvents(events);
   }
 }
-
-export default ChatService;
-
-class NewService extends ChatService {
-  constructor() {
-    super({
-      cors: {
-        origin: ["http://localhost:8080", "https://admin.socket.io"],
-        credentials: true,
-      },
-    });
-  }
-}
-
-new NewService();

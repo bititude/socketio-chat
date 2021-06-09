@@ -13,7 +13,7 @@ enum COLOR_CODE {
   WARN_BG = "\x1b[43m",
 }
 
-class Logger {
+export class Logger {
   private name = "SocketChat";
   private isLogging: boolean;
   constructor(options: LoggerOptions) {
@@ -24,6 +24,11 @@ class Logger {
     this.isLogging = log;
   }
 
+  /**
+   * Get Info string that printed on every log
+   * @param color color code of log text
+   * @returns {string} string that appended with all defaukt infos
+   */
   private getInfoLog = (color: keyof typeof COLOR_CODE) => {
     const time = new Date().toLocaleTimeString();
     return (
@@ -34,6 +39,11 @@ class Logger {
     );
   };
 
+  /**
+   * Stringify all messages to be logged.
+   * @param messages array of messages of type any
+   * @returns stringified messages
+   */
   private stringifyMessages = (messages: any[]) =>
     messages.map((message) => {
       if (typeof message === "object") {
@@ -79,4 +89,3 @@ class Logger {
     );
   }
 }
-export default Logger;

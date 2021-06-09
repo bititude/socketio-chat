@@ -1,6 +1,5 @@
-import ChatEmitter from "../helpers/event-listener";
-import Logger from "../helpers/logger";
-import { Socket } from "../types";
+import { ChatEmitter, Logger } from "../helpers";
+import { Socket, SOCKET_EVENTS } from "../types";
 
 export class UserService {
   private logger: Logger;
@@ -17,7 +16,7 @@ export class UserService {
   joinSockets(socket: Socket) {
     const user = socket.user;
     if (!user) {
-      return;
+      throw new Error("No user found");
     }
     const { userRoomId, groups } = user;
     const rooms = [userRoomId, ...(groups || [])];
@@ -32,11 +31,11 @@ export class UserService {
   sendOnlineStatus(socket: Socket, connected: boolean) {
     const user = socket.user;
     if (!user) {
-      return;
+      throw new Error("No user found");
     }
     const { friends, groups } = user;
     const roomIds = [...(friends || []), ...(groups || [])];
-    socket.to(roomIds).emit("user connection", {
+    socket.to(roomIds).emit(SOCKET_EVENTS.USER_CONNECTION, {
       connected,
       user: user.userRoomId,
     });

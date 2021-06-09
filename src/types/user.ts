@@ -16,6 +16,12 @@ export interface User {
 }
 
 export interface UserAuth {
-  userRoomId: string;
+  /**
+   * Unique room id
+   */
+  userRoomId: RoomId;
+  /**
+   * Generated token on authentication
+   */
   token: string;
 }
