@@ -13,23 +13,38 @@ import {
 } from "./types";
 const DEFAULT_PORT = 3030;
 
-export abstract class ChatService {
+class ChatService {
   private io: Server;
   private logger: Logger;
   private userService: UserService;
   private messageService: MessageService;
   private chatEmitter: ChatEmitter;
 
-  /* ***** protected methods ***** */
-  protected async onUserConnect?(user: User): Promise<void>;
-  protected async onOnlineStatusSend?(connected: boolean): Promise<void>;
-  protected async onRoomsJoined?(rooms: string[]): Promise<void>;
-  protected async onMessageRecieved?(message: Message): Promise<void>;
-  protected async authenticateUser?(auth: any): Promise<User>;
+  /* ***** private methods ***** */
+  private async onUserConnect?(user: User): Promise<void>;
+  private async onOnlineStatusSend?(connected: boolean): Promise<void>;
+  private async onRoomsJoined?(rooms: string[]): Promise<void>;
+  private async onMessageRecieved?(message: Message): Promise<void>;
+  private async authenticateUser?(auth: any): Promise<User>;
   /* ***** protected methods end ***** */
 
   constructor(initOptions?: IoInitOptions, log?: boolean) {
-    const { srv, ...otherOptions } = initOptions || {};
+    const {
+      srv,
+      onUserConnect,
+      onOnlineStatusSend,
+      onRoomsJoined,
+      onMessageRecieved,
+      authenticateUser,
+      ...otherOptions
+    } = initOptions || {};
+
+    this.onUserConnect = onUserConnect;
+    this.onOnlineStatusSend = onOnlineStatusSend;
+    this.onRoomsJoined = onRoomsJoined;
+    this.onMessageRecieved = onMessageRecieved;
+    this.authenticateUser = authenticateUser;
+
     this.logger = new Logger({ log });
     this.chatEmitter = new ChatEmitter();
     this.userService = new UserService(this.chatEmitter, log);
@@ -133,3 +148,5 @@ export abstract class ChatService {
     this.chatEmitter.registerEvents(events);
   }
 }
+
+export default ChatService;

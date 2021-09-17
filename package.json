@@ -1,8 +1,12 @@
 {
   "name": "express-socketio-chat",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "description": "Socket io chat service",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
     "prebuild": "rimraf ./lib",
     "build": "tsc",
