@@ -13,7 +13,7 @@ import {
 } from "./types";
 const DEFAULT_PORT = 3030;
 
-class ChatService {
+export class ChatService {
   private io: Server;
   private logger: Logger;
   private userService: UserService;
@@ -148,5 +148,3 @@ class ChatService {
     this.chatEmitter.registerEvents(events);
   }
 }
-
-export default ChatService;
