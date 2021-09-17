@@ -1,5 +1,5 @@
 # socket-chat
 
 ```bash
-npm install socket-chat
+npm install @bititude/socket-chat
 ```
