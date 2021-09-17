@@ -1,6 +1,6 @@
 {
-  "name": "socket-chat",
-  "version": "1.0.0",
+  "name": "@bititude/socketio-chat",
+  "version": "0.1.0",
   "description": "Socket io chat service",
   "main": "./lib/index.js",
   "scripts": {
