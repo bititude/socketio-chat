@@ -1,5 +1,5 @@
 import { User, Message, IoInitOptions } from "./types";
-export declare abstract class ChatService {
+export declare class ChatService {
     private io;
     private logger;
     private userService;
