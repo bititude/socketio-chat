@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:akhiakl/socket-chat.git"
+    "url": "git+https://github.com/bititude/nodejs-socket-chat.git"
   },
   "keywords": [
     "socket.io",
@@ -51,7 +51,7 @@
   "author": "Bititude Technologies",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com:akhiakl/socket-chat/issues"
+    "url": "https://github.com/bititude/nodejs-socket-chat/issues"
   },
-  "homepage": "https://github.com:akhiakl/socket-chat#readme"
+  "homepage": "https://github.com/bititude/nodejs-socket-chat#readme"
 }
