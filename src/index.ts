@@ -100,7 +100,7 @@ export class ChatService {
       this.userService.sendOnlineStatus(socket, true);
     }
     // Register private message events
-    socket.on(SOCKET_EVENTS.PVT_MESSAGE, (message: Message) =>
+    socket.on(SOCKET_EVENTS.MESSAGE, (message: Message) =>
       this.onPrivateMessage(socket, message)
     );
     // Register client disconnection

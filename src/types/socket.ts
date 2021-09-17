@@ -6,7 +6,7 @@ export enum IO_EVENTS {
   DISCONNECT = "disconnect",
 }
 export enum SOCKET_EVENTS {
-  PVT_MESSAGE = "private_message",
+  MESSAGE = "message",
   USER_CONNECTION = "user_connection",
 }
 export interface Socket extends SocketIoSocket {

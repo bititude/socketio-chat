@@ -1,6 +1,6 @@
 {
-  "name": "express-socketio-chat",
-  "version": "0.4.1",
+  "name": "@bititude/socketio-chat",
+  "version": "0.0.1",
   "description": "Socket io chat service",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -22,7 +22,7 @@ export class MessageService {
       throw new Error("No content or to");
     }
     const from = user.userRoomId;
-    socket.to(to).emit(SOCKET_EVENTS.PVT_MESSAGE, {
+    socket.to(to).emit(SOCKET_EVENTS.MESSAGE, {
       content,
       to,
       from,
