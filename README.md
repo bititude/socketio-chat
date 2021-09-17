@@ -1,5 +1,5 @@
 # socket-chat
 
 ```bash
-npm install @bititude/socket-chat
+npm install express-socketio-chat
 ```

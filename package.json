@@ -1,5 +1,5 @@
 {
-  "name": "@bititude/socketio-chat",
+  "name": "express-socketio-chat",
   "version": "0.1.0",
   "description": "Socket io chat service",
   "main": "./lib/index.js",
