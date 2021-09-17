@@ -43,7 +43,6 @@ export class ChatService {
     this.onOnlineStatusSend = onOnlineStatusSend;
     this.onRoomsJoined = onRoomsJoined;
     this.onMessageRecieved = onMessageRecieved;
-    this.authenticateUser = authenticateUser;
 
     this.logger = new Logger({ log });
     this.chatEmitter = new ChatEmitter();
@@ -56,10 +55,11 @@ export class ChatService {
 
     /*  to enable socket admin ui, install package and uncomment below line */
     // instrument(this.io, { auth: false });
-
-    this.logger.log("User Authentication enabled");
-    this.io.use(this.useAuthenticator);
-
+    if (authenticateUser) {
+      this.authenticateUser = authenticateUser;
+      this.logger.log("User Authentication enabled");
+      this.io.use(this.useAuthenticator);
+    }
     this.initiateEvents();
   }
 
