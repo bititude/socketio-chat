@@ -21,16 +21,17 @@ export class ChatService {
   private chatEmitter: ChatEmitter;
 
   /* ***** private methods ***** */
-  private async onUserConnect?(user: User): Promise<void>;
-  private async onOnlineStatusSend?(connected: boolean): Promise<void>;
-  private async onRoomsJoined?(rooms: string[]): Promise<void>;
-  private async onMessageRecieved?(message: Message): Promise<void>;
-  private async authenticateUser?(auth: any): Promise<User>;
+  private onUserConnect?(user: User): Promise<void> | void;
+  private onOnlineStatusSend?(connected: boolean): Promise<void> | void;
+  private onRoomsJoined?(rooms: string[]): Promise<void> | void;
+  private onMessageRecieved?(message: Message): Promise<void> | void;
+  private authenticateUser?(auth: any): Promise<User> | User;
   /* ***** protected methods end ***** */
 
-  constructor(initOptions?: IoInitOptions, log?: boolean) {
+  constructor(initOptions?: IoInitOptions) {
     const {
       srv,
+      log,
       onUserConnect,
       onOnlineStatusSend,
       onRoomsJoined,

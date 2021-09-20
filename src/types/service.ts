@@ -14,9 +14,9 @@ export interface IoInitOptions extends Partial<ServerOptions> {
    */
   log?: boolean;
 
-  onUserConnect?: (user: User) => Promise<void>;
-  onOnlineStatusSend?: (connected: boolean) => Promise<void>;
-  onRoomsJoined?: (rooms: string[]) => Promise<void>;
-  onMessageRecieved?: (message: Message) => Promise<void>;
-  authenticateUser?: (auth: any) => Promise<User>;
+  onUserConnect?: (user: User) => Promise<void> | void;
+  onOnlineStatusSend?: (connected: boolean) => Promise<void> | void;
+  onRoomsJoined?: (rooms: string[]) => Promise<void> | void;
+  onMessageRecieved?: (message: Message) => Promise<void> | void;
+  authenticateUser?: (auth: any) => Promise<User> | User;
 }

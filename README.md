@@ -52,12 +52,49 @@ new ChatService({
 ```
 
   
-## Features
+## Options
 
-- Message Events
-- User connection events
-- User authentication
+`ChatService` accepts different options
 
+
+| Name                  | Type              | Required   | Description                                       |
+| --------------------- | ----------------- | ---------- | ------------------------------------------------- |
+| `srv`                 | Number/HttpServer | Yes        | http server, port                                 |
+| `log`                 | Boolean           | No         | Enable/Disable logs default `true`   |
+| `onUserConnect`       | Function          | No         | On User connection event listener |
+| `onOnlineStatusSend`  | Function          | No         | On User online status send event listener |
+| `onRoomsJoined`       | Function          | No         | On Rooms joined by a user event listener |
+| `onMessageRecieved`   | Function          | No         | On message recieved event listener |
+| `authenticateUser`    | Function          | No         | Authentication method        |
+
+
+Example
+
+```javascript
+new ChatService({
+    srv: 3000,
+    onUserConnect: (user: User)=>{
+      console.log(user)
+    },
+    onOnlineStatusSend: (connected: boolean)=>{
+      console.log(`User is ${connected? 'connected': 'disconnected'}`)
+    },
+    onRoomsJoined: (rooms: string[])=>{
+      console.log('user joined rooms:', rooms)
+    },
+    onUserConnect: (message: Message)=>{
+      console.log(`A new message recieved from ${message.from}`,message.content)
+    },
+    authenticateUser: (auth)=>{
+      if(auth.token === '#token'){
+        return user;
+      }
+      return null
+    }
+});
+``` 
+
+**_NOTE:_** if `authenticateUser` is not passed socketio connection won't be authenticated.
 ## Related
 
 Read more about
